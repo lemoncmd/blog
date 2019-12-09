@@ -3,15 +3,26 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://blog.anzu.tech/post/</loc>
+    <lastmod>2019-12-09T13:07:46+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.anzu.tech/</loc>
+    <lastmod>2019-12-09T13:07:46+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.anzu.tech/post/test/</loc>
+    <lastmod>2019-12-09T13:07:46+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.anzu.tech/categories/</loc>
   </url>
   
   <url>
     <loc>http://blog.anzu.tech/tags/</loc>
-  </url>
-  
-  <url>
-    <loc>http://blog.anzu.tech/</loc>
   </url>
   
 </urlset>
