@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>だらだらと技術ブログ</title>
-    <link>http://blog.anzu.tech/</link>
+    <link>https://blog.anzu.tech/</link>
     <description>Recent content on だらだらと技術ブログ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Mon, 09 Dec 2019 13:07:46 +0900</lastBuildDate>
     
-	<atom:link href="http://blog.anzu.tech/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.anzu.tech/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>ブログ始めたよー</title>
-      <link>http://blog.anzu.tech/post/test/</link>
+      <link>https://blog.anzu.tech/post/test/</link>
       <pubDate>Mon, 09 Dec 2019 13:07:46 +0900</pubDate>
       
-      <guid>http://blog.anzu.tech/post/test/</guid>
+      <guid>https://blog.anzu.tech/post/test/</guid>
       <description>ブログを始めた 上着を着てもまだ肌寒く、木々はその葉を落とした。
 街は師走。クリスマスも近づき浮かれている中。
 そんな12月は、技術者にとってはアドベントカレンダーの季節。
