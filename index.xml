@@ -6,10 +6,20 @@
     <description>Recent content on だらだらと技術ブログ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Thu, 12 Dec 2019 14:18:20 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 24 Dec 2019 10:14:08 +0900</lastBuildDate>
     
 	<atom:link href="https://blog.anzu.tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>V言語でCコンパイラを作った話</title>
+      <link>https://blog.anzu.tech/post/vcc/</link>
+      <pubDate>Tue, 24 Dec 2019 10:14:08 +0900</pubDate>
+      
+      <guid>https://blog.anzu.tech/post/vcc/</guid>
+      <description>V言語でCコンパイラを作ってみた これ見てね
+おわりに いかがでしたか？ よく分かりませんでしたが、V言語でCコンパイラは作れるようです。 今後も分かり次第情報を追加する予定です。</description>
+    </item>
     
     <item>
       <title>異世界の難解プログラミング言語「lex」の紹介</title>
@@ -41,11 +51,11 @@ lex V
 異世界の難解プログラミング言語「lex」 「lex」概要 lex はスタック指向の難解プログラミング言語です。これは草稿段階なのでいろいろできないことあります。
 lexは基本的には全てのデータがFILO(First-In Last-Out)のデータ構造であるスタックに保存されます。 そしてそのスタック上のデータをこねくり回していろいろします。
 以下のプログラムは、lexで最も簡単なプログラムの一つです。
-lex vintifarlirges la lex. このプログラムでは、自分自身を返すvintifarlirges(リパライン語で「自己同一化する」)という関数を定義しています。
+lex vintifarlirges la lex . このプログラムでは、自分自身を返すvintifarlirges(リパライン語で「自己同一化する」)という関数を定義しています。
 プログラミング言語「lex」って何の略？ 「lex」とは、
 lex es xlaisoss の略で、「『lex』は命令列」と、「～を行う命令列」という二つの意味があります。
 関数定義 関数を定義するには、lex Vというキーワードを用います。以下のVには関数名を、続けてプログラムの内容を、最後にピリオドで区切ります。
-lex V プログラム . 基本的にlexのプログラムは関数定義の集合で書かれます。</description>
+lex V プログラム .</description>
     </item>
     
     <item>

@@ -38,11 +38,11 @@ lex V
 異世界の難解プログラミング言語「lex」 「lex」概要 lex はスタック指向の難解プログラミング言語です。これは草稿段階なのでいろいろできないことあります。
 lexは基本的には全てのデータがFILO(First-In Last-Out)のデータ構造であるスタックに保存されます。 そしてそのスタック上のデータをこねくり回していろいろします。
 以下のプログラムは、lexで最も簡単なプログラムの一つです。
-lex vintifarlirges la lex. このプログラムでは、自分自身を返すvintifarlirges(リパライン語で「自己同一化する」)という関数を定義しています。
+lex vintifarlirges la lex . このプログラムでは、自分自身を返すvintifarlirges(リパライン語で「自己同一化する」)という関数を定義しています。
 プログラミング言語「lex」って何の略？ 「lex」とは、
 lex es xlaisoss の略で、「『lex』は命令列」と、「～を行う命令列」という二つの意味があります。
 関数定義 関数を定義するには、lex Vというキーワードを用います。以下のVには関数名を、続けてプログラムの内容を、最後にピリオドで区切ります。
-lex V プログラム . 基本的にlexのプログラムは関数定義の集合で書かれます。"/>
+lex V プログラム ."/>
 
     <meta property="og:title" content="異世界の難解プログラミング言語「lex」の紹介" />
 <meta property="og:description" content="これは悠里・大宇宙界隈 Advent Calendar 2019の12日目の記事です。
@@ -69,15 +69,15 @@ lex V
 異世界の難解プログラミング言語「lex」 「lex」概要 lex はスタック指向の難解プログラミング言語です。これは草稿段階なのでいろいろできないことあります。
 lexは基本的には全てのデータがFILO(First-In Last-Out)のデータ構造であるスタックに保存されます。 そしてそのスタック上のデータをこねくり回していろいろします。
 以下のプログラムは、lexで最も簡単なプログラムの一つです。
-lex vintifarlirges la lex. このプログラムでは、自分自身を返すvintifarlirges(リパライン語で「自己同一化する」)という関数を定義しています。
+lex vintifarlirges la lex . このプログラムでは、自分自身を返すvintifarlirges(リパライン語で「自己同一化する」)という関数を定義しています。
 プログラミング言語「lex」って何の略？ 「lex」とは、
 lex es xlaisoss の略で、「『lex』は命令列」と、「～を行う命令列」という二つの意味があります。
 関数定義 関数を定義するには、lex Vというキーワードを用います。以下のVには関数名を、続けてプログラムの内容を、最後にピリオドで区切ります。
-lex V プログラム . 基本的にlexのプログラムは関数定義の集合で書かれます。" />
+lex V プログラム ." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.anzu.tech/post/lex/" />
 <meta property="article:published_time" content="2019-12-12T14:18:20+09:00" />
-<meta property="article:modified_time" content="2019-12-12T23:50:01+09:00" />
+<meta property="article:modified_time" content="2019-12-13T10:46:25+09:00" />
 
 
   </head>
@@ -154,7 +154,7 @@ lex V<br>
 <p>lexは基本的には全てのデータがFILO(First-In Last-Out)のデータ構造であるスタックに保存されます。
 そしてそのスタック上のデータをこねくり回していろいろします。</p>
 <p>以下のプログラムは、lexで最も簡単なプログラムの一つです。</p>
-<pre><code>lex vintifarlirges la lex.
+<pre><code>lex vintifarlirges la lex .
 </code></pre><p>このプログラムでは、自分自身を返す<code>vintifarlirges</code>(リパライン語で「自己同一化する」)という関数を定義しています。</p>
 <h3 id="lex3">プログラミング言語「lex」って何の略？</h3>
 <p>「lex」とは、</p>
@@ -205,7 +205,7 @@ lex V<br>
 <p>関数を実行した後は、節を区切るか、関数を終了するまでは、即値しかスタックに積めません。これは、関数を実行すると<code>la lex</code>のような値が崩れるためです。</p>
 <pre><code>lex 4tva la lex la lex lex ata
      elx la lex la lex lex ata .
-</code></pre><p>今回は見やすいようにインデントしています。lex は空白文字はキーワードを区切るのに用いられ、改行やタブ文字などは区別しません。</p>
+</code></pre><p>今回は見やすいようにインデントしています。l空白文字はキーワードを区切るのに用いられ、改行やタブ文字などは区別しません。</p>
 <h3 id="heading7">ジャンプ</h3>
 <p>条件分岐をするには、<code>melx</code>というキーワードを用います。これは、スタックの位置をリセットしつつ、スタックの二番目の値を見て、0ならばスタックの一番目の値だけ節を飛ばします。なお、2つの値は消費されます。<br>
 以下の関数では、2つの値を受け取り、二番目の値が0でなければ一番目の2倍します。</p>
