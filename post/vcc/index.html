@@ -14,20 +14,58 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="V言語でCコンパイラを作った話"/>
-<meta name="twitter:description" content="V言語でCコンパイラを作ってみた これ見てね
-おわりに いかがでしたか？
-よく分かりませんでしたが、V言語でCコンパイラは作れるようです。
-今後も分かり次第情報を追加する予定です。"/>
+<meta name="twitter:description" content="参考元：低レイヤを知りたい人のためのCコンパイラ作成入門
+ソースコード：C compiler written in V
+Twitterモーメント：VCC開発日記まとめ V言語HP：The V Programming Language
+Cコンパイラを作ろうとした話  をとこもすなるCコンパイラ作成といふものを、杏もしてみむとてするなり。
+ 昨年(2018年)のセキュリティ・キャンプでruiu氏講師のC言語コンパイラ作成講座が開かれた。
+当時私はTLでhsjoihs氏がやってるのを見てて楽しそうだなーと思う反面分からんという気持ちが多く、それを横目にCPUをガリガリ書いてた。
+時は変わって今年(2019年)の6月あたり、V言語というモダンでシンプルかつ安全な言語を謳ったプログラミング言語がオープンソースになってリリースされた。
+6月時点では(さすがに個人開発だったため)実装が甘く散々に批判されていたが、最近はだいぶバグも減って喧伝されていた機能も追加されてきている。
+そんな中、ゲテモノを食うのが好きだった私はそのコミュニティの観察が趣味になっていた。
+貢献してみたい気持ちも山々だけども、私が何かできるとしたら周辺の標準ライブラリ関連だけで、中心のコンパイラに関しては何の理解もしていなかった。
+なので、何かコンパイラを勉強できるものはないか探していた。
+Googleで一番最初に出てきたのが参考元のruiu氏の「低レイヤを知りたい人のためのコンパイラ作成入門」だった。(SEO強すぎでは)
+この文書は、セキュリティ・キャンプでの講義の内容が元になっているらしく、先人たちの 屍 知見が多いため参考になろう。
+そして手元にあったV言語で私はC言語のコンパイラを書き始めたのだった&hellip;
+ビルド・実行方法 V言語のインストール まず、私の環境はWindows上のWSLで、ディストリビューションはUbuntu16.04で動かしている。基本的にV言語はUnix系OSやWindowsのMingwなどがサポートされているので、適当な環境を作成すれば動く。
+まずはgitをインストールする。パッケージコマンドは環境依存なので、適宜(yumやらbrewやら)に置き換えて読んでほしい。
+$ sudo apt update $ sudo apt install git gitをインストールしたら、V言語のソースコードをGitHubからダウンロードしてビルドする。
+$ git clone https://github.com/vlang/v $ cd v $ make ビルドが終わったら、vコマンドを使えるようにするために、リンクを作成する。
+$ sudo ./v symlink これでvコマンドが使えるようになる。また、これからもしV言語をアップデートしたくなれば、v upと打つだけでアップデートが開始する。
+VCCのビルド 次に、VCCのビルドをしていく。
+まずはVCCのソースコードをGitHubからダウンロードする。
+$ git clone https://github.com/lemoncmd/vcc 終わったら、VCCのディレクトリに移り、ビルドする。
+$ cd vcc $ make これで、vccという実行ファイルが作成される。"/>
 
     <meta property="og:title" content="V言語でCコンパイラを作った話" />
-<meta property="og:description" content="V言語でCコンパイラを作ってみた これ見てね
-おわりに いかがでしたか？
-よく分かりませんでしたが、V言語でCコンパイラは作れるようです。
-今後も分かり次第情報を追加する予定です。" />
+<meta property="og:description" content="参考元：低レイヤを知りたい人のためのCコンパイラ作成入門
+ソースコード：C compiler written in V
+Twitterモーメント：VCC開発日記まとめ V言語HP：The V Programming Language
+Cコンパイラを作ろうとした話  をとこもすなるCコンパイラ作成といふものを、杏もしてみむとてするなり。
+ 昨年(2018年)のセキュリティ・キャンプでruiu氏講師のC言語コンパイラ作成講座が開かれた。
+当時私はTLでhsjoihs氏がやってるのを見てて楽しそうだなーと思う反面分からんという気持ちが多く、それを横目にCPUをガリガリ書いてた。
+時は変わって今年(2019年)の6月あたり、V言語というモダンでシンプルかつ安全な言語を謳ったプログラミング言語がオープンソースになってリリースされた。
+6月時点では(さすがに個人開発だったため)実装が甘く散々に批判されていたが、最近はだいぶバグも減って喧伝されていた機能も追加されてきている。
+そんな中、ゲテモノを食うのが好きだった私はそのコミュニティの観察が趣味になっていた。
+貢献してみたい気持ちも山々だけども、私が何かできるとしたら周辺の標準ライブラリ関連だけで、中心のコンパイラに関しては何の理解もしていなかった。
+なので、何かコンパイラを勉強できるものはないか探していた。
+Googleで一番最初に出てきたのが参考元のruiu氏の「低レイヤを知りたい人のためのコンパイラ作成入門」だった。(SEO強すぎでは)
+この文書は、セキュリティ・キャンプでの講義の内容が元になっているらしく、先人たちの 屍 知見が多いため参考になろう。
+そして手元にあったV言語で私はC言語のコンパイラを書き始めたのだった&hellip;
+ビルド・実行方法 V言語のインストール まず、私の環境はWindows上のWSLで、ディストリビューションはUbuntu16.04で動かしている。基本的にV言語はUnix系OSやWindowsのMingwなどがサポートされているので、適当な環境を作成すれば動く。
+まずはgitをインストールする。パッケージコマンドは環境依存なので、適宜(yumやらbrewやら)に置き換えて読んでほしい。
+$ sudo apt update $ sudo apt install git gitをインストールしたら、V言語のソースコードをGitHubからダウンロードしてビルドする。
+$ git clone https://github.com/vlang/v $ cd v $ make ビルドが終わったら、vコマンドを使えるようにするために、リンクを作成する。
+$ sudo ./v symlink これでvコマンドが使えるようになる。また、これからもしV言語をアップデートしたくなれば、v upと打つだけでアップデートが開始する。
+VCCのビルド 次に、VCCのビルドをしていく。
+まずはVCCのソースコードをGitHubからダウンロードする。
+$ git clone https://github.com/lemoncmd/vcc 終わったら、VCCのディレクトリに移り、ビルドする。
+$ cd vcc $ make これで、vccという実行ファイルが作成される。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.anzu.tech/post/vcc/" />
 <meta property="article:published_time" content="2019-12-24T10:14:08+09:00" />
-<meta property="article:modified_time" content="2019-12-24T10:23:17+09:00" />
+<meta property="article:modified_time" content="2019-12-24T10:24:31+09:00" />
 
 
   </head>
@@ -68,9 +106,95 @@
         </div></div>
     </header>
     <div class="post-content">
-      <h1 id="vc">V言語でCコンパイラを作ってみた</h1>
-<p><a href="https://github.com/lemoncmd/vcc">これ見てね</a></p>
-<h1 id="heading">おわりに</h1>
+      <p>参考元：<a href="https://www.sigbus.info/compilerbook">低レイヤを知りたい人のためのCコンパイラ作成入門</a><br>
+ソースコード：<a href="https://github.com/lemoncmd/vcc">C compiler written in V</a><br>
+Twitterモーメント：<a href="https://twitter.com/i/events/1181774789565808641">VCC開発日記まとめ</a>
+V言語HP：<a href="https://vlang.io">The V Programming Language</a></p>
+<h1 id="c">Cコンパイラを作ろうとした話</h1>
+<blockquote>
+<p><em>をとこもすなるCコンパイラ作成といふものを、杏もしてみむとてするなり。</em></p>
+</blockquote>
+<p>昨年(2018年)のセキュリティ・キャンプで<a href="https://twitter.com/rui314">ruiu氏</a>講師のC言語コンパイラ作成講座が開かれた。<br>
+当時私はTLで<a href="https://twitter.com/hsjoihs">hsjoihs氏</a>がやってるのを見てて楽しそうだなーと思う反面分からんという気持ちが多く、それを横目にCPUをガリガリ書いてた。</p>
+<p>時は変わって今年(2019年)の6月あたり、V言語というモダンでシンプルかつ安全な言語を謳ったプログラミング言語がオープンソースになってリリースされた。<br>
+6月時点では(さすがに個人開発だったため)実装が甘く散々に批判されていたが、最近はだいぶバグも減って喧伝されていた機能も追加されてきている。</p>
+<p>そんな中、ゲテモノを食うのが好きだった私はそのコミュニティの観察が趣味になっていた。<br>
+貢献してみたい気持ちも山々だけども、私が何かできるとしたら周辺の標準ライブラリ関連だけで、中心のコンパイラに関しては何の理解もしていなかった。<br>
+なので、何かコンパイラを勉強できるものはないか探していた。</p>
+<p>Googleで一番最初に出てきたのが参考元のruiu氏の「低レイヤを知りたい人のためのコンパイラ作成入門」だった。(SEO強すぎでは)<br>
+この文書は、セキュリティ・キャンプでの講義の内容が元になっているらしく、先人たちの <del>屍</del> 知見が多いため参考になろう。</p>
+<p>そして手元にあったV言語で私はC言語のコンパイラを書き始めたのだった&hellip;</p>
+<h1 id="heading">ビルド・実行方法</h1>
+<h2 id="v">V言語のインストール</h2>
+<p>まず、私の環境はWindows上のWSLで、ディストリビューションはUbuntu16.04で動かしている。基本的にV言語はUnix系OSやWindowsのMingwなどがサポートされているので、適当な環境を作成すれば動く。</p>
+<p>まずはgitをインストールする。パッケージコマンドは環境依存なので、適宜(yumやらbrewやら)に置き換えて読んでほしい。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo apt update
+$ sudo apt install git
+</code></pre></div><p>gitをインストールしたら、V言語のソースコードをGitHubからダウンロードしてビルドする。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ git clone https://github.com/vlang/v
+$ cd v
+$ make
+</code></pre></div><p>ビルドが終わったら、<code>v</code>コマンドを使えるようにするために、リンクを作成する。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo ./v symlink
+</code></pre></div><p>これで<code>v</code>コマンドが使えるようになる。また、これからもしV言語をアップデートしたくなれば、<code>v up</code>と打つだけでアップデートが開始する。</p>
+<h2 id="vcc">VCCのビルド</h2>
+<p>次に、VCCのビルドをしていく。</p>
+<p>まずはVCCのソースコードをGitHubからダウンロードする。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ git clone https://github.com/lemoncmd/vcc
+</code></pre></div><p>終わったら、VCCのディレクトリに移り、ビルドする。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cd vcc
+$ make
+</code></pre></div><p>これで、<code>vcc</code>という実行ファイルが作成される。</p>
+<h2 id="heading1">コンパイル方法</h2>
+<p>以下のコマンドで、アセンブリコードが出力される。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ./vcc hoge.c &gt; hoge.s
+</code></pre></div><p>そして、GCCでアセンブリコードをコンパイルする。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gcc -o hoge hoge.s
+</code></pre></div><p>これで<code>hoge</code>という実行ファイルが作成される。<br>
+なお、今のところVCCはプリプロセッサを搭載していないため、プリプロセスしたい場合はGCCに任せる。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gcc -E -U__GNUC__ -o hoge2.c hoge.c
+</code></pre></div><h1 id="v1">V言語での開発設計について</h1>
+<p>参考元のCコンパイラはC言語で書かれているため、いくつか設計上の差異が存在した。<br>
+その内容を以下にいくつか示す。</p>
+<h2 id="heading2">オブジェクト指向</h2>
+<p>まず、V言語にはグローバル変数が存在しない。<br>
+そこで、設計構造を移植する際には構造体のメンバを利用する。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">// グローバル変数 global_var
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> global_var;
+
+<span style="color:#75715e">// global_varを引数aの値に書き換える関数 hoge
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hoge</span>(<span style="color:#66d9ef">int</span> a) {
+  global_var <span style="color:#f92672">=</span> a;
+}
+</code></pre></div><p>C言語ではこのように書かれるものは、V言語では以下のように書かれる。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-v" data-lang="v"><span style="color:#75715e">// 構造体 Something
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> Something {
+<span style="color:#75715e">// mut(書き換え可能)なSomethingのメンバ global_var
+</span><span style="color:#75715e"></span>mut:
+  global_var <span style="color:#66d9ef">int</span>
+}
+
+<span style="color:#75715e">// Somethingのmut(構造体を書き換え可能)なメソッド hoge
+</span><span style="color:#75715e"></span>fn (s mut Something) hoge(<span style="color:#66d9ef">int</span> a) {
+  s.global_var <span style="color:#f92672">=</span> a
+}
+</code></pre></div><p>上のように、グローバル変数がメンバ、関数がメソッドになっている。<br>
+実際にC言語でグローバル変数が使われるケースではこのようなオブジェクト指向で事足りることが多いので、他のオブジェクト指向言語よろしくどんどん活用する。
+なお、V言語では安全性のためにデフォルトで変数やメンバは宣言時以降は書き換えられないので、書き換えたいものはmutを付けて宣言する。</p>
+<h2 id="heading3">エラー構造</h2>
+<p>執筆中</p>
+<h1 id="heading4">「低レイヤ」以降の実装</h1>
+<p>ruiu氏の文書に書かれている機能は実装完了したので、それ以降の機能についていくつか知見を記す(未実装もあり)。</p>
+<h2 id="unsigned-void-float">型(unsigned, void, float等)</h2>
+<h2 id="heading5">初期化</h2>
+<h2 id="do">do文</h2>
+<h2 id="switch">switch文</h2>
+<h2 id="heading6">引数</h2>
+<h2 id="heading7">構造体</h2>
+<h2 id="heading8">プリプロセッサ</h2>
+<h1 id="v2">V言語コンパイラを改善する</h1>
+<h1 id="heading9">現在の進捗</h1>
+<h1 id="heading10">おわりに</h1>
 <p>いかがでしたか？</p>
 <p>よく分かりませんでしたが、V言語でCコンパイラは作れるようです。<br>
 今後も分かり次第情報を追加する予定です。</p>

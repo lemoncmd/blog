@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <title>2時間でコンパイラを作った話 // だらだらと技術ブログ</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.60.1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="れもん(杏bot" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://blog.anzu.tech/css/main.min.61bb32028587f24ca28522d8d197970c7ef33284e5fffb45a75fcbbb2dbc4dcb.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
+    <link rel="stylesheet" href="/css/sharebutton.css">
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="2時間でコンパイラを作った話"/>
+<meta name="twitter:description" content="※注意：この記事を読む前に異世界の難解プログラミング言語「lex」の紹介を読むことをお勧めします。
+まへがき 私は電車に揺られながらオフ会会場へと向かっていた。
+移ろいゆく景色を眺めながら、そこはかとなく
+あーコンパイラ作らないとな
+と思った。
+What&#39;s happened? とあるオフ会にてスライド発表をしよう！ということになりました。
+それで私はせっかくプログラミング言語の仕様を作ったのにこれを用いない手はない！ と思ったんですよ。
+それで、以下を用意する手はずだったんです。
+ スライド コンパイラ(或いはインタプリタ) 気合  当日の朝。なにも用意できませんでした。
+おはようございます。
+あえて言うならば気合だけは用意できました。
+そこで、何が何でも発表するため、スライドはhsjoihs氏に用意してもらえることになったので、私は行きの電車内の2時間でコンパイラを作成することにした。
+ほんぶん コンパイラ(インタプリタ)を作る言語 2時間で作れる規模のコンパイラを作るにあたり、私が手癖で書ける言語といえばJavaScriptしかありませんでした。(それが後々功を奏した)
+というわけでまずはindex.htmlとindex.jsを作成します。
+CSSだァ？そんなもの要るわけねぇだろ！
+HTMLに必要なものは
+ コード書く場所 出力する場所 実行ボタン ぐらいなので、これだけ書いてさっさとJavaScriptに移りましょう。(※実物のコードにインデントは無い)  &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;meta charset=&#34;UTF-8&#34;&gt; &lt;script src=&#34;index.js&#34;&gt;&lt;/script&gt; &lt;/head&gt; &lt;body&gt; program:&lt;br&gt; &lt;textarea id=&#34;program&#34; rows=&#34;10&#34; cols=&#34;64&#34;&gt;&lt;/textarea&gt;&lt;br&gt; output:&lt;br&gt; &lt;textarea id=&#34;output&#34; rows=&#34;10&#34; cols=&#34;64&#34;&gt;&lt;/textarea&gt;&lt;br&gt; &lt;input type=&#34;button&#34; onclick=&#34;/*あとで*/&#34; value=&#34;run&#34;&gt; &lt;/body&gt; &lt;/html&gt; インタプリタの仕様 インタプリタは大体以下の構造で動きます。ちなみにコンパイラとインタプリタの違いは出力先がruntimeか機械語かの違いです(ほんまか？)。
+しかし、ここでは2時間で仕上げるために以下を削ります。
+簡単な言語なのでtokenizerはString.prototype.splitに任意長の空白を意味する正規表現を流すだけで区切れます。
+const tok = src.split(/\s&#43;/); また、これから作る「lex」言語はプログラムの順番とIR(中間表現)の順番が大体同じという言語特徴を持っているので、パーサーとコードジェネレーターをくっつけることができます。
+そして最適化は2時間クオリティに必要ありませんよね？
+パーサー(兼コードジェネレーター) この「lex」言語は、LL(1)文法で記述できる言語、という分類をされます。"/>
+
+    <meta property="og:title" content="2時間でコンパイラを作った話" />
+<meta property="og:description" content="※注意：この記事を読む前に異世界の難解プログラミング言語「lex」の紹介を読むことをお勧めします。
+まへがき 私は電車に揺られながらオフ会会場へと向かっていた。
+移ろいゆく景色を眺めながら、そこはかとなく
+あーコンパイラ作らないとな
+と思った。
+What&#39;s happened? とあるオフ会にてスライド発表をしよう！ということになりました。
+それで私はせっかくプログラミング言語の仕様を作ったのにこれを用いない手はない！ と思ったんですよ。
+それで、以下を用意する手はずだったんです。
+ スライド コンパイラ(或いはインタプリタ) 気合  当日の朝。なにも用意できませんでした。
+おはようございます。
+あえて言うならば気合だけは用意できました。
+そこで、何が何でも発表するため、スライドはhsjoihs氏に用意してもらえることになったので、私は行きの電車内の2時間でコンパイラを作成することにした。
+ほんぶん コンパイラ(インタプリタ)を作る言語 2時間で作れる規模のコンパイラを作るにあたり、私が手癖で書ける言語といえばJavaScriptしかありませんでした。(それが後々功を奏した)
+というわけでまずはindex.htmlとindex.jsを作成します。
+CSSだァ？そんなもの要るわけねぇだろ！
+HTMLに必要なものは
+ コード書く場所 出力する場所 実行ボタン ぐらいなので、これだけ書いてさっさとJavaScriptに移りましょう。(※実物のコードにインデントは無い)  &lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;meta charset=&#34;UTF-8&#34;&gt; &lt;script src=&#34;index.js&#34;&gt;&lt;/script&gt; &lt;/head&gt; &lt;body&gt; program:&lt;br&gt; &lt;textarea id=&#34;program&#34; rows=&#34;10&#34; cols=&#34;64&#34;&gt;&lt;/textarea&gt;&lt;br&gt; output:&lt;br&gt; &lt;textarea id=&#34;output&#34; rows=&#34;10&#34; cols=&#34;64&#34;&gt;&lt;/textarea&gt;&lt;br&gt; &lt;input type=&#34;button&#34; onclick=&#34;/*あとで*/&#34; value=&#34;run&#34;&gt; &lt;/body&gt; &lt;/html&gt; インタプリタの仕様 インタプリタは大体以下の構造で動きます。ちなみにコンパイラとインタプリタの違いは出力先がruntimeか機械語かの違いです(ほんまか？)。
+しかし、ここでは2時間で仕上げるために以下を削ります。
+簡単な言語なのでtokenizerはString.prototype.splitに任意長の空白を意味する正規表現を流すだけで区切れます。
+const tok = src.split(/\s&#43;/); また、これから作る「lex」言語はプログラムの順番とIR(中間表現)の順番が大体同じという言語特徴を持っているので、パーサーとコードジェネレーターをくっつけることができます。
+そして最適化は2時間クオリティに必要ありませんよね？
+パーサー(兼コードジェネレーター) この「lex」言語は、LL(1)文法で記述できる言語、という分類をされます。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.anzu.tech/post/2hour_compiler/" />
+<meta property="article:published_time" content="2020-04-08T20:25:57+09:00" />
+<meta property="article:modified_time" content="2020-04-08T20:25:57+09:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://blog.anzu.tech/"><img class="app-header-avatar" src="/img/icon.jpg" alt="れもん(杏bot" /></a>
+      <h1>だらだらと技術ブログ</h1>
+      <p>努力しないための努力、楽しいことを楽しむ。</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/lemoncmd" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+          <a target="_blank" href="https://twitter.com/_lem0n_" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">2時間でコンパイラを作った話</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Apr 8, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <p>※注意：この記事を読む前に<a href="../lex/">異世界の難解プログラミング言語「lex」の紹介</a>を読むことをお勧めします。</p>
+<h1 id="heading">まへがき</h1>
+<p>私は電車に揺られながらオフ会会場へと向かっていた。<br>
+移ろいゆく景色を眺めながら、そこはかとなく</p>
+<p><em>あーコンパイラ作らないとな</em></p>
+<p>と思った。</p>
+<h1 id="whats-happened">What's happened?</h1>
+<p>とあるオフ会にてスライド発表をしよう！ということになりました。<br>
+それで私はせっかく<a href="../lex/">プログラミング言語</a>の仕様を作ったのにこれを用いない手はない！
+と思ったんですよ。<br>
+それで、以下を用意する手はずだったんです。</p>
+<ul>
+<li>スライド</li>
+<li>コンパイラ(或いはインタプリタ)</li>
+<li>気合</li>
+</ul>
+<p>当日の朝。なにも用意できませんでした。<br>
+おはようございます。<br>
+あえて言うならば気合だけは用意できました。</p>
+<p>そこで、何が何でも発表するため、スライドは<a href="https://twitter.com/hsjoihs">hsjoihs氏</a>に用意してもらえることになったので、私は行きの電車内の2時間でコンパイラを作成することにした。</p>
+<h1 id="heading1">ほんぶん</h1>
+<h2 id="heading2">コンパイラ(インタプリタ)を作る言語</h2>
+<p>2時間で作れる規模のコンパイラを作るにあたり、私が手癖で書ける言語といえばJavaScriptしかありませんでした。(それが後々功を奏した)<br>
+というわけでまずは<code>index.html</code>と<code>index.js</code>を作成します。<br>
+CSSだァ？そんなもの要るわけねぇだろ！</p>
+<p>HTMLに必要なものは</p>
+<ul>
+<li>コード書く場所</li>
+<li>出力する場所</li>
+<li>実行ボタン
+ぐらいなので、これだけ書いてさっさとJavaScriptに移りましょう。(※実物のコードにインデントは無い)</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html:index.html" data-lang="html:index.html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+&lt;<span style="color:#f92672">html</span>&gt;
+  &lt;<span style="color:#f92672">head</span>&gt;
+    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
+    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;index.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+  &lt;/<span style="color:#f92672">head</span>&gt;
+  &lt;<span style="color:#f92672">body</span>&gt;
+    program:&lt;<span style="color:#f92672">br</span>&gt;
+    &lt;<span style="color:#f92672">textarea</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;program&#34;</span> <span style="color:#a6e22e">rows</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">cols</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;64&#34;</span>&gt;&lt;/<span style="color:#f92672">textarea</span>&gt;&lt;<span style="color:#f92672">br</span>&gt;
+    output:&lt;<span style="color:#f92672">br</span>&gt;
+    &lt;<span style="color:#f92672">textarea</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;output&#34;</span> <span style="color:#a6e22e">rows</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">cols</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;64&#34;</span>&gt;&lt;/<span style="color:#f92672">textarea</span>&gt;&lt;<span style="color:#f92672">br</span>&gt;
+    &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/*あとで*/&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;run&#34;</span>&gt;
+  &lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><h2 id="heading3">インタプリタの仕様</h2>
+<p>インタプリタは大体以下の構造で動きます。ちなみにコンパイラとインタプリタの違いは出力先がruntimeか機械語かの違いです(ほんまか？)。</p>
+<p><img src="/img/interpreter.png" alt="interpreter"></p>
+<p>しかし、ここでは2時間で仕上げるために以下を削ります。</p>
+<p><img src="/img/interpreter2.png" alt="interpreter2"></p>
+<p>簡単な言語なのでtokenizerは<code>String.prototype.split</code>に任意長の空白を意味する正規表現を流すだけで区切れます。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">tok</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">src</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">/\s+/</span>);
+</code></pre></div><p>また、これから作る「lex」言語はプログラムの順番とIR(中間表現)の順番が大体同じという言語特徴を持っているので、パーサーとコードジェネレーターをくっつけることができます。<br>
+そして最適化は2時間クオリティに必要ありませんよね？</p>
+<h2 id="heading4">パーサー(兼コードジェネレーター)</h2>
+<p>この「lex」言語は、LL(1)文法で記述できる言語、という分類をされます。<br>
+これはどういうことかというと、言語を解析する際に遠くのトークン(激ウマギャグ)を読んだり既に読んだトークンを読み直したりしなくても、単純にトークンを1つずつ解析していくだけで読める言語だということです。単純ってことです。</p>
+<p>コードを解析する方法としては再帰下降法を用います。<br>
+再帰下降とは、解析するコードの入れ子構造をパーサー側で再帰構造に見立てて解析していく方法です。<br>
+この方法の利点としては、構文木と関数呼び出しの形が同じになっていてパーサーのコードの見通しが良くなる点、また書きやすくなる点が挙げられます。</p>
+<p>ではやっていきます。まずトークンを読み進める関数を作ります。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">step</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">//現在のトークンの位置
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">curtok</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">tok</span>[<span style="color:#ae81ff">0</span>]; <span style="color:#75715e">//現在のトークン
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">next</span>() {
+  <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;&#34;</span>) <span style="color:#66d9ef">throw</span> <span style="color:#e6db74">&#34;Reached EOF&#34;</span>; <span style="color:#75715e">//最終トークン以降を読もうとするとエラー
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">step</span><span style="color:#f92672">++</span>;
+  <span style="color:#a6e22e">curtok</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">tok</span>[<span style="color:#a6e22e">step</span>];
+  <span style="color:#66d9ef">if</span>(<span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">curtok</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;undefined&#34;</span>) <span style="color:#a6e22e">curtok</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>; <span style="color:#75715e">//最終トークンは0文字の文字列にする
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>これで、<code>curtok</code>変数を読むことで現在のトークンを取得し、<code>next</code>関数で読み進められるようになりました。</p>
+<p>次に、どのように中間コードを出力するかを考えましょう。<br>
+今回の言語では、関数定義と実行する関数を出力したいので、以下の変数を用意しました。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">progs</span> <span style="color:#f92672">=</span> {<span style="color:#a6e22e">dec</span><span style="color:#f92672">:</span>{}, <span style="color:#a6e22e">prog</span><span style="color:#f92672">:</span>[]};
+</code></pre></div><p><code>dec</code>は関数名をキーとして関数定義(二重配列、後で説明)を値とするHashMapとなっています。<br>
+<code>prog</code>は実行する関数の関数名の配列です。</p>
+<p>具体的な言語仕様は<a href="../lex/">先述の記事</a>で読んでいただきたいのですが、二重配列にしたのは節ごとにコード列を区切りたかったからです。<br>
+節ごとにコードを保存する配列を変えるのは、ジャンプ処理を楽にするため(見る節を変える操作が配列のインデックスを変えるだけでよくなる)です。</p>
+<p>さて、再帰下降を書いていきます。<br>
+コードの構造を記述する方法として、BNFというものがあります。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bnf" data-lang="bnf">program <span style="color:#f92672">::=</span> declare*
+declare <span style="color:#f92672">::=</span> &#34;lex&#34; funcdec | funcname &#34;.&#34;
+funcdec <span style="color:#f92672">::=</span> funcname code* &#34;.&#34;
+code <span style="color:#f92672">::=</span> &#34;la&#34;* &#34;lex&#34; | &#34;lex&#34; funcname | &#34;elx&#34; | &#34;melx&#34; | &#34;pelx&#34; | number
+
+funcname <span style="color:#f92672">::=</span> (任意の文字列)
+number <span style="color:#f92672">::=</span> (数値)
+</code></pre></div><p>簡単に言うと<code>*</code>記号が繰り返しで、<code>|</code>記号が「または」を表します。<br>
+プログラムは<code>declare</code>の集合で、<code>declare</code>は&quot;lex&quot;+関数定義、または関数名+&rdquo;.&ldquo;で表せる、などと読みます。<br>
+実は再帰下降法はこれをそのまま関数に落とし込むだけなんです。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">program</span>() {
+  <span style="color:#66d9ef">while</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;&#34;</span>) <span style="color:#a6e22e">declare</span>();
+}
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">declare</span>() {
+  <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;lex&#34;</span>) {
+    <span style="color:#a6e22e">next</span>();
+    <span style="color:#a6e22e">funcdec</span>();
+  } <span style="color:#66d9ef">else</span> {
+    <span style="color:#a6e22e">next</span>();
+    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;.&#34;</span>) <span style="color:#66d9ef">throw</span> <span style="color:#e6db74">&#34;Expected `.`&#34;</span>;
+    <span style="color:#a6e22e">next</span>();
+  }
+}
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">funcdec</span>() {
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">funcname</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">curtok</span>;
+  <span style="color:#a6e22e">next</span>();
+  <span style="color:#66d9ef">while</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;.&#34;</span>) <span style="color:#a6e22e">code</span>();
+  <span style="color:#a6e22e">next</span>(); <span style="color:#75715e">//&#34;.&#34;を読む用
+</span><span style="color:#75715e"></span>}
+<span style="color:#75715e">//以下省略
+</span></code></pre></div><p>現在のトークンを読んでBNF中のマッチする構造を解析していく。<br>
+コードを見るとBNFそのままであるように思えます。<code>*</code>はwhile文、<code>|</code>はif文で表せます。</p>
+<p>今回はこの解析関数にコード生成を入れていきます。
+まず<code>declare</code>関数を次のように変更します。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">declare</span>() {
+  <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;lex&#34;</span>) {
+    <span style="color:#a6e22e">next</span>();
+    <span style="color:#a6e22e">progs</span>.<span style="color:#a6e22e">dec</span>[<span style="color:#a6e22e">curtok</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">funcdek</span>();
+  } <span style="color:#66d9ef">else</span> {
+    <span style="color:#a6e22e">progs</span>.<span style="color:#a6e22e">prog</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">curtok</span>);
+    <span style="color:#a6e22e">next</span>();
+    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;.&#34;</span>) <span style="color:#66d9ef">throw</span> <span style="color:#e6db74">&#34;Expected `.`&#34;</span>;
+    <span style="color:#a6e22e">next</span>();
+  }
+}
+</code></pre></div><p>これから<code>funcdec</code>関数に関数ごとのコード列を返させるので、ここで関数定義に登録しているわけですね！</p>
+<p>では<code>funcdec</code>関数をやっていきます。<br>
+なお、<code>code</code>関数はコード生成の都合上<code>funcdec</code>関数に取り込まれました。特に関数を分けるメリットもないしね。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">funcdec</span>() {
+  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">sentences</span> <span style="color:#f92672">=</span> [[]];
+  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">cursent</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">sentences</span>[<span style="color:#ae81ff">0</span>];
+  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">sentstep</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">nextsent</span>(){
+    <span style="color:#a6e22e">sentstep</span><span style="color:#f92672">++</span>;
+    <span style="color:#a6e22e">cursent</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">sentences</span>[<span style="color:#a6e22e">sentstep</span>] <span style="color:#f92672">=</span> [];
+  }
+
+  <span style="color:#a6e22e">next</span>(); <span style="color:#75715e">//関数名を飛ばす
+</span><span style="color:#75715e"></span>
+  <span style="color:#75715e">/* コード生成部分 */</span>
+
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sentences</span>;
+}
+</code></pre></div><p>まずsentencesという二重配列を用意して、現在の節を表す変数と、次の節(ジャンプ単位)に移る関数も用意したので、これで下準備は完了です。</p>
+<p>次に関数定義本体をやります。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">dofn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>; <span style="color:#75715e">//節中で関数を呼んでいるかどうか
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">las</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">//&#34;la&#34;* &#34;lex&#34;のlaの数
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">maxlas</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">//節中のlaの数の最大数
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">while</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;.&#34;</span>) {
+  <span style="color:#66d9ef">switch</span>(<span style="color:#a6e22e">curtok</span>) {
+    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;la&#34;</span><span style="color:#f92672">:</span> <span style="color:#75715e">//&#34;la&#34;* &#34;lex&#34;のla
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">dofn</span>) <span style="color:#66d9ef">throw</span> <span style="color:#e6db74">&#34;Cannot put `la` after function call&#34;</span>;
+      <span style="color:#a6e22e">las</span><span style="color:#f92672">++</span>;
+      <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">maxlas</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">las</span>) <span style="color:#a6e22e">maxlas</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">las</span>; <span style="color:#75715e">//最大の更新
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">las</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">3</span>) <span style="color:#66d9ef">throw</span> <span style="color:#e6db74">&#34;Too many `la`s more than 3 in the sentence&#34;</span>;
+    <span style="color:#66d9ef">break</span>;
+
+    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;lex&#34;</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">las</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) { <span style="color:#75715e">//&#34;la&#34;* &#34;lex&#34;のlex
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">cursent</span>.<span style="color:#a6e22e">push</span>({<span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;lex&#34;</span>, <span style="color:#a6e22e">value</span><span style="color:#f92672">:</span><span style="color:#a6e22e">las</span>});
+        <span style="color:#a6e22e">las</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+      } <span style="color:#66d9ef">else</span> { <span style="color:#75715e">//&#34;lex&#34; funcnameのlex
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">next</span>();
+        <span style="color:#a6e22e">cursent</span>.<span style="color:#a6e22e">push</span>({<span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;execute&#34;</span>, <span style="color:#a6e22e">value</span><span style="color:#f92672">:</span><span style="color:#a6e22e">curtok</span>});
+        <span style="color:#a6e22e">dofn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+      }
+    <span style="color:#66d9ef">break</span>;
+
+    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;elx&#34;</span><span style="color:#f92672">:</span> <span style="color:#75715e">//節を区切る奴たち
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;melx&#34;</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;pelx&#34;</span><span style="color:#f92672">:</span>
+      <span style="color:#a6e22e">dofn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+      <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">curtok</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;elx&#34;</span>) <span style="color:#a6e22e">cursent</span>.<span style="color:#a6e22e">push</span>({<span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#a6e22e">curtok</span>});
+      <span style="color:#a6e22e">cursent</span>.<span style="color:#a6e22e">unshift</span>({<span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;pop&#34;</span>, <span style="color:#a6e22e">value</span><span style="color:#f92672">:</span><span style="color:#a6e22e">maxlas</span>}); <span style="color:#75715e">//節の頭にpopする命令を入れる。
+</span><span style="color:#75715e"></span>      <span style="color:#a6e22e">maxlas</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+      <span style="color:#a6e22e">nextsent</span>();
+    <span style="color:#66d9ef">break</span>;
+
+    <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span> <span style="color:#75715e">//数値
+</span><span style="color:#75715e"></span>      <span style="color:#a6e22e">cursent</span>.<span style="color:#a6e22e">push</span>({<span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;push&#34;</span>, <span style="color:#a6e22e">value</span><span style="color:#f92672">:</span>Number(<span style="color:#a6e22e">curtok</span>)});
+    <span style="color:#66d9ef">break</span>;
+  }
+  <span style="color:#a6e22e">next</span>();
+}
+<span style="color:#a6e22e">cursent</span>.<span style="color:#a6e22e">unshift</span>({<span style="color:#a6e22e">type</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;pop&#34;</span>, <span style="color:#a6e22e">value</span><span style="color:#f92672">:</span><span style="color:#a6e22e">maxlas</span>}); <span style="color:#75715e">//最後が&#34;.&#34;で終わっているが、そこでも節は終了判定なのでpop命令を入れるべし
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">next</span>(); <span style="color:#75715e">//&#34;.&#34;の読み飛ばし
+</span></code></pre></div><p>IRの命令のデータ形式はtypeに命令の名前、valueに引数を入れています。<br>
+これで実際に実行するとき扱いやすくなります。</p>
+<h2 id="heading5">コード実行</h2>
+<p>解析して出力されたIRを実行していきましょう！</p>
+<p>まず、この言語はスタック指向なのでスタックを作ります。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">runtime</span>(<span style="color:#a6e22e">src</span>) {
+  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">stack</span> <span style="color:#f92672">=</span> [];
+  <span style="color:#75715e">/* ここに定義された関数を実行する関数 */</span>
+  <span style="color:#75715e">/* ここに関数実行 */</span>
+}
+</code></pre></div><p>簡単だね。</p>
+<p>次に、定義された関数を実行をする関数を書いていきます。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">fname</span>) {
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">func</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">src</span>.<span style="color:#a6e22e">dec</span>[<span style="color:#a6e22e">fname</span>]; <span style="color:#75715e">//関数本体
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span>(<span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">func</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;undefined&#34;</span>) <span style="color:#66d9ef">throw</span> <span style="color:#e6db74">&#34;Function `&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">fname</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;` is not defined&#34;</span>;
+
+  <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">si</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">si</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">func</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">si</span><span style="color:#f92672">++</span>) { <span style="color:#75715e">//siは節の位置
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sent</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">func</span>[<span style="color:#a6e22e">si</span>];
+    <span style="color:#a6e22e">lex</span> <span style="color:#a6e22e">lexes</span> <span style="color:#f92672">=</span> []; <span style="color:#75715e">// la lexの置き場所
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">op</span> <span style="color:#66d9ef">of</span> <span style="color:#a6e22e">sent</span>) {
+      <span style="color:#66d9ef">switch</span>(<span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">type</span>) {
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;pop&#34;</span><span style="color:#f92672">:</span>
+          <span style="color:#75715e">//スタックからポップしたものをla lexの置き場所に入れていく
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">value</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) <span style="color:#a6e22e">lexes</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>());
+        <span style="color:#66d9ef">break</span>;
+
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;push&#34;</span><span style="color:#f92672">:</span>
+          <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">value</span>);
+        <span style="color:#66d9ef">break</span>;
+
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;lex&#34;</span><span style="color:#f92672">:</span>
+          <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">lexes</span>[<span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">value</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]);
+        <span style="color:#66d9ef">break</span>;
+
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;execute&#34;</span><span style="color:#f92672">:</span>
+          <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;xel&#34;</span>) { <span style="color:#75715e">//標準出力のプリミティブ関数
+</span><span style="color:#75715e"></span>            document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#34;output&#34;</span>).<span style="color:#a6e22e">value</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>(<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>());
+          } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;ata&#34;</span>) { <span style="color:#75715e">//加算のプリミティブ関数
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>() <span style="color:#f92672">+</span> <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>());
+          } <span style="color:#66d9ef">else</span> { <span style="color:#75715e">//ただの関数実行
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">value</span>);
+          }
+        <span style="color:#66d9ef">break</span>;
+
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;pelx&#34;</span><span style="color:#f92672">:</span>
+          <span style="color:#a6e22e">si</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>();
+        <span style="color:#66d9ef">break</span>;
+
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;melx&#34;</span><span style="color:#f92672">:</span>
+          <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">jump</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>();
+          <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>() <span style="color:#f92672">===</span> <span style="color:#ae81ff">0</span>) <span style="color:#a6e22e">si</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">jump</span>;
+        <span style="color:#66d9ef">break</span>;
+      }
+    }
+  }
+}
+</code></pre></div><p>基本的には命令を見ながら<code>stack</code>をpushしたりpopしたりして値や制御構造を制御していくだけです。</p>
+<p>最後に、実行すべき関数の関数名を<code>execute</code>関数に放り投げていき、プログラムを実行します。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">src</span>.<span style="color:#a6e22e">prog</span>.<span style="color:#a6e22e">forEach</span>(<span style="color:#a6e22e">fname</span> =&gt; <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">fname</span>));
+</code></pre></div><p>こういうとき関数型プログラミングって便利なのよね。</p>
+<p>というわけでこれにてコードが実行できるようになりました！</p>
+<h2 id="heading6">仕上げ</h2>
+<p>HTMLのボタンを実行するコードをまだ書いてなかったなと思いつつ。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;runtime(compile(document.getElementById(&#39;program&#39;).value))&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;run&#34;</span>&gt;
+</code></pre></div><p>これで、書かれたプログラムを読み取り、コンパイルし、実行します！やったー！
+<img src="/img/lexscreen.png" alt="screenshot"></p>
+<h1 id="heading7">さいごに</h1>
+<p>オフ会では無事発表を終えました。好評をいただいて何よりでした。わーい<br>
+皆さんも作ってみましょうコンパイラ(575)</p>
+
+    </div>
+    <div class="post-footer">
+      
+<section class="section sns_parent">
+  <div class="container sns_section">
+    <div class="sns_button twitter">
+      <a href="http://twitter.com/intent/tweet?url=https%3a%2f%2fblog.anzu.tech%2fpost%2f2hour_compiler%2f&text=2%e6%99%82%e9%96%93%e3%81%a7%e3%82%b3%e3%83%b3%e3%83%91%e3%82%a4%e3%83%a9%e3%82%92%e4%bd%9c%e3%81%a3%e3%81%9f%e8%a9%b1%20%2f%2f%20%e3%81%a0%e3%82%89%e3%81%a0%e3%82%89%e3%81%a8%e6%8a%80%e8%a1%93%e3%83%96%e3%83%ad%e3%82%b0" target="_blank" title="Tweet">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </div>
+    <div class="sns_button hatena">
+      <a href="http://b.hatena.ne.jp/add?mode=confirm&url=https%3a%2f%2fblog.anzu.tech%2fpost%2f2hour_compiler%2f&title=2%e6%99%82%e9%96%93%e3%81%a7%e3%82%b3%e3%83%b3%e3%83%91%e3%82%a4%e3%83%a9%e3%82%92%e4%bd%9c%e3%81%a3%e3%81%9f%e8%a9%b1%20%2f%2f%20%e3%81%a0%e3%82%89%e3%81%a0%e3%82%89%e3%81%a8%e6%8a%80%e8%a1%93%e3%83%96%e3%83%ad%e3%82%b0" target="_blank" title="hatena">
+        <i class="fa fa-hatena"></i>
+      </a>
+    </div>
+    <div class="sns_button facebook">
+      <a href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.anzu.tech%2fpost%2f2hour_compiler%2f&t=2%e6%99%82%e9%96%93%e3%81%a7%e3%82%b3%e3%83%b3%e3%83%91%e3%82%a4%e3%83%a9%e3%82%92%e4%bd%9c%e3%81%a3%e3%81%9f%e8%a9%b1%20%2f%2f%20%e3%81%a0%e3%82%89%e3%81%a0%e3%82%89%e3%81%a8%e6%8a%80%e8%a1%93%e3%83%96%e3%83%ad%e3%82%b0" target="_blank" title="Facebook">
+        <i class="fab fa-facebook"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "lemon-a" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

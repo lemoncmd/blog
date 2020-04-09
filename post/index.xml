@@ -6,10 +6,40 @@
     <description>Recent content in Posts on だらだらと技術ブログ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 24 Dec 2019 10:14:08 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 08 Apr 2020 20:25:57 +0900</lastBuildDate>
     
 	<atom:link href="https://blog.anzu.tech/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>2時間でコンパイラを作った話</title>
+      <link>https://blog.anzu.tech/post/2hour_compiler/</link>
+      <pubDate>Wed, 08 Apr 2020 20:25:57 +0900</pubDate>
+      
+      <guid>https://blog.anzu.tech/post/2hour_compiler/</guid>
+      <description>※注意：この記事を読む前に異世界の難解プログラミング言語「lex」の紹介を読むことをお勧めします。
+まへがき 私は電車に揺られながらオフ会会場へと向かっていた。
+移ろいゆく景色を眺めながら、そこはかとなく
+あーコンパイラ作らないとな
+と思った。
+What&#39;s happened? とあるオフ会にてスライド発表をしよう！ということになりました。
+それで私はせっかくプログラミング言語の仕様を作ったのにこれを用いない手はない！ と思ったんですよ。
+それで、以下を用意する手はずだったんです。
+ スライド コンパイラ(或いはインタプリタ) 気合  当日の朝。なにも用意できませんでした。
+おはようございます。
+あえて言うならば気合だけは用意できました。
+そこで、何が何でも発表するため、スライドはhsjoihs氏に用意してもらえることになったので、私は行きの電車内の2時間でコンパイラを作成することにした。
+ほんぶん コンパイラ(インタプリタ)を作る言語 2時間で作れる規模のコンパイラを作るにあたり、私が手癖で書ける言語といえばJavaScriptしかありませんでした。(それが後々功を奏した)
+というわけでまずはindex.htmlとindex.jsを作成します。
+CSSだァ？そんなもの要るわけねぇだろ！
+HTMLに必要なものは
+ コード書く場所 出力する場所 実行ボタン ぐらいなので、これだけ書いてさっさとJavaScriptに移りましょう。(※実物のコードにインデントは無い)  &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;script src=&amp;#34;index.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; program:&amp;lt;br&amp;gt; &amp;lt;textarea id=&amp;#34;program&amp;#34; rows=&amp;#34;10&amp;#34; cols=&amp;#34;64&amp;#34;&amp;gt;&amp;lt;/textarea&amp;gt;&amp;lt;br&amp;gt; output:&amp;lt;br&amp;gt; &amp;lt;textarea id=&amp;#34;output&amp;#34; rows=&amp;#34;10&amp;#34; cols=&amp;#34;64&amp;#34;&amp;gt;&amp;lt;/textarea&amp;gt;&amp;lt;br&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; onclick=&amp;#34;/*あとで*/&amp;#34; value=&amp;#34;run&amp;#34;&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; インタプリタの仕様 インタプリタは大体以下の構造で動きます。ちなみにコンパイラとインタプリタの違いは出力先がruntimeか機械語かの違いです(ほんまか？)。
+しかし、ここでは2時間で仕上げるために以下を削ります。
+簡単な言語なのでtokenizerはString.prototype.splitに任意長の空白を意味する正規表現を流すだけで区切れます。
+const tok = src.split(/\s+/); また、これから作る「lex」言語はプログラムの順番とIR(中間表現)の順番が大体同じという言語特徴を持っているので、パーサーとコードジェネレーターをくっつけることができます。
+そして最適化は2時間クオリティに必要ありませんよね？
+パーサー(兼コードジェネレーター) この「lex」言語は、LL(1)文法で記述できる言語、という分類をされます。</description>
+    </item>
     
     <item>
       <title>V言語でCコンパイラを作った話</title>
@@ -17,10 +47,29 @@
       <pubDate>Tue, 24 Dec 2019 10:14:08 +0900</pubDate>
       
       <guid>https://blog.anzu.tech/post/vcc/</guid>
-      <description>V言語でCコンパイラを作ってみた これ見てね
-おわりに いかがでしたか？
-よく分かりませんでしたが、V言語でCコンパイラは作れるようです。
-今後も分かり次第情報を追加する予定です。</description>
+      <description>参考元：低レイヤを知りたい人のためのCコンパイラ作成入門
+ソースコード：C compiler written in V
+Twitterモーメント：VCC開発日記まとめ V言語HP：The V Programming Language
+Cコンパイラを作ろうとした話  をとこもすなるCコンパイラ作成といふものを、杏もしてみむとてするなり。
+ 昨年(2018年)のセキュリティ・キャンプでruiu氏講師のC言語コンパイラ作成講座が開かれた。
+当時私はTLでhsjoihs氏がやってるのを見てて楽しそうだなーと思う反面分からんという気持ちが多く、それを横目にCPUをガリガリ書いてた。
+時は変わって今年(2019年)の6月あたり、V言語というモダンでシンプルかつ安全な言語を謳ったプログラミング言語がオープンソースになってリリースされた。
+6月時点では(さすがに個人開発だったため)実装が甘く散々に批判されていたが、最近はだいぶバグも減って喧伝されていた機能も追加されてきている。
+そんな中、ゲテモノを食うのが好きだった私はそのコミュニティの観察が趣味になっていた。
+貢献してみたい気持ちも山々だけども、私が何かできるとしたら周辺の標準ライブラリ関連だけで、中心のコンパイラに関しては何の理解もしていなかった。
+なので、何かコンパイラを勉強できるものはないか探していた。
+Googleで一番最初に出てきたのが参考元のruiu氏の「低レイヤを知りたい人のためのコンパイラ作成入門」だった。(SEO強すぎでは)
+この文書は、セキュリティ・キャンプでの講義の内容が元になっているらしく、先人たちの 屍 知見が多いため参考になろう。
+そして手元にあったV言語で私はC言語のコンパイラを書き始めたのだった&amp;hellip;
+ビルド・実行方法 V言語のインストール まず、私の環境はWindows上のWSLで、ディストリビューションはUbuntu16.04で動かしている。基本的にV言語はUnix系OSやWindowsのMingwなどがサポートされているので、適当な環境を作成すれば動く。
+まずはgitをインストールする。パッケージコマンドは環境依存なので、適宜(yumやらbrewやら)に置き換えて読んでほしい。
+$ sudo apt update $ sudo apt install git gitをインストールしたら、V言語のソースコードをGitHubからダウンロードしてビルドする。
+$ git clone https://github.com/vlang/v $ cd v $ make ビルドが終わったら、vコマンドを使えるようにするために、リンクを作成する。
+$ sudo ./v symlink これでvコマンドが使えるようになる。また、これからもしV言語をアップデートしたくなれば、v upと打つだけでアップデートが開始する。
+VCCのビルド 次に、VCCのビルドをしていく。
+まずはVCCのソースコードをGitHubからダウンロードする。
+$ git clone https://github.com/lemoncmd/vcc 終わったら、VCCのディレクトリに移り、ビルドする。
+$ cd vcc $ make これで、vccという実行ファイルが作成される。</description>
     </item>
     
     <item>
