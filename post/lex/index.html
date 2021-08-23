@@ -3,11 +3,11 @@
   <head>
     <title>異世界の難解プログラミング言語「lex」の紹介 // だらだらと技術ブログ</title>
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.60.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="れもん(杏bot" />
     <meta name="description" content="" />
-    <link rel="stylesheet" href="https://blog.anzu.tech/css/main.min.61bb32028587f24ca28522d8d197970c7ef33284e5fffb45a75fcbbb2dbc4dcb.css" />
+    <link rel="stylesheet" href="https://blog.anzu.tech/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
     <link rel="stylesheet" href="/css/sharebutton.css">
 
@@ -89,10 +89,12 @@ lex V プログラム ." />
       <div class="app-header-social">
         
           <a target="_blank" href="https://github.com/lemoncmd" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
   <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
 </svg></a>
         
           <a target="_blank" href="https://twitter.com/_lem0n_" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <title>twitter</title>
   <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
 </svg></a>
         
@@ -106,12 +108,14 @@ lex V プログラム ." />
       <div class="post-meta">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
 </svg>
           Dec 12, 2019
         </div>
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
           2 min read
@@ -119,8 +123,8 @@ lex V プログラム ." />
     </header>
     <div class="post-content">
       <p>これは<a href="https://adventar.org/calendars/4508">悠里・大宇宙界隈 Advent Calendar 2019</a>の12日目の記事です。</p>
-<h1 id="heading">異世界とはなんぞや？</h1>
-<h3 id="heading1">「悠里」とは？</h3>
+<h1 id="異世界とはなんぞや">異世界とはなんぞや？</h1>
+<h3 id="悠里とは">「悠里」とは？</h3>
 <p>まず、 <strong>総合創作界隈『悠里』</strong> について説明。</p>
 <blockquote>
 <p>「悠里(Jurli/Yuuri)」とは、人工言語ユーゴック語と、人工言語リパライン語を主軸として架空世界を展開していくものです。架空世界の持つ文化、風土、歴史、宗教、人種など、さまざまな観点から創作していく総合創作です。<br>
@@ -129,12 +133,12 @@ lex V プログラム ." />
 <p>つまるところ、<strong>人工言語</strong>を中心に世界観を創作する界隈です。
 ユーゴック語やリパライン語のほかにも、ざっくり十数言語以上は創作されています。<br>
 他にも、科学的なことから果てはボドゲまで作られてたり。</p>
-<h3 id="fafss">「FAFss」とは？</h3>
+<h3 id="fafssとは">「FAFss」とは？</h3>
 <p><strong>FAFss</strong> とは、悠里内の組織の一つで、主に計算機科学をやっていく集団。<br>
 様々なプログラミング言語やらアセンブリやらCPUやらが作られている。ヤバ。</p>
 <p>架空世界の方にもFAFssという組織があり、そっちでは <strong>†革新的計算機†</strong> が作られたという設定。</p>
 <p>なぜか筆者はFAFssとかいう頭おかしい集団にねじ込まれているので、ブログに頭おかしい成果を残そうと思いました。</p>
-<h3 id="lex">「lex」とは？</h3>
+<h3 id="lexとは">「lex」とは？</h3>
 <p>悠里の主要言語の一つであるリパライン語には、<em>&ldquo;lex&rdquo;</em> という頭おかしい単語があります。</p>
 <p>リパライン語辞書にはこのように記載されています。</p>
 <blockquote>
@@ -148,23 +152,23 @@ lex V<br>
 動詞の連体形を作る。</p>
 </blockquote>
 <p>これを<del>悪用</del>活用しました。</p>
-<h1 id="lex1">異世界の難解プログラミング言語「lex」</h1>
-<h3 id="lex2">「lex」概要</h3>
+<h1 id="異世界の難解プログラミング言語lex">異世界の難解プログラミング言語「lex」</h1>
+<h3 id="lex概要">「lex」概要</h3>
 <p><strong>lex</strong> はスタック指向の難解プログラミング言語です。これは草稿段階なのでいろいろできないことあります。</p>
 <p>lexは基本的には全てのデータがFILO(First-In Last-Out)のデータ構造であるスタックに保存されます。
 そしてそのスタック上のデータをこねくり回していろいろします。</p>
 <p>以下のプログラムは、lexで最も簡単なプログラムの一つです。</p>
 <pre><code>lex vintifarlirges la lex .
 </code></pre><p>このプログラムでは、自分自身を返す<code>vintifarlirges</code>(リパライン語で「自己同一化する」)という関数を定義しています。</p>
-<h3 id="lex3">プログラミング言語「lex」って何の略？</h3>
+<h3 id="プログラミング言語lexって何の略">プログラミング言語「lex」って何の略？</h3>
 <p>「lex」とは、</p>
 <pre><code>lex es xlaisoss
 </code></pre><p>の略で、「『lex』は命令列」と、「～を行う命令列」という二つの意味があります。</p>
-<h3 id="heading2">関数定義</h3>
+<h3 id="関数定義">関数定義</h3>
 <p>関数を定義するには、<code>lex V</code>というキーワードを用います。以下のVには関数名を、続けてプログラムの内容を、最後にピリオドで区切ります。</p>
 <pre><code>lex V プログラム .
 </code></pre><p>基本的にlexのプログラムは関数定義の集合で書かれます。</p>
-<h3 id="heading3">データ</h3>
+<h3 id="データ">データ</h3>
 <p>スタックにデータを積む方法は3種類あります。</p>
 <ul>
 <li>即値</li>
@@ -175,7 +179,7 @@ lex V<br>
 以下のプログラムでは、3という即値と4という即値を積む関数を定義しています。</p>
 <pre><code>lex ekcan3 3 4 .
 </code></pre><p>積まれる順番は左から順です。なので、この値を取り出す順番は4、3になります。</p>
-<h3 id="heading4">スタックから取り出す</h3>
+<h3 id="スタックから取り出す">スタックから取り出す</h3>
 <p>基本的にはプログラマは、スタックの上から3つまでのデータを取り出し、自由に扱うことができます。</p>
 <ul>
 <li><code>la lex</code></li>
@@ -191,12 +195,12 @@ lex V<br>
 <pre><code>lex therda la lex la lex .
 </code></pre><p>次の例では、スタック上の上2つの値を交換しています。</p>
 <pre><code>lex inferln la lex la la lex .
-</code></pre><h3 id="heading5">節</h3>
+</code></pre><h3 id="節">節</h3>
 <p><code>la lex</code>の示すスタックの位置を現在位置に更新したいとき、<code>elx</code>というキーワードを用いることでリセットすることができます。<br>
 先ほどの、一番上のデータを取り出して積んで取り出して積むような関数を作りたければ、このように書きます。</p>
 <pre><code>lex etxaataes la lex elx la lex .
 </code></pre><p>節は、関数を実行した際は区切らなければならず、またプログラム中でジャンプを行う目印になります。</p>
-<h3 id="heading6">関数の実行</h3>
+<h3 id="関数の実行">関数の実行</h3>
 <p>例えば、<code>lex ata</code>と定義された関数があったとしましょう。この関数は、2つの値をとり、1つの値を返します。勿論、引数のやり取りもスタック上で行われます。<br>
 この関数を実行するには、関数名の前に<code>lex</code>を置きましょう。以下の関数では、受け取った値を2倍にしています。</p>
 <pre><code>lex 2tva la lex la lex lex ata .
@@ -206,7 +210,7 @@ lex V<br>
 <pre><code>lex 4tva la lex la lex lex ata
      elx la lex la lex lex ata .
 </code></pre><p>今回は見やすいようにインデントしています。l空白文字はキーワードを区切るのに用いられ、改行やタブ文字などは区別しません。</p>
-<h3 id="heading7">ジャンプ</h3>
+<h3 id="ジャンプ">ジャンプ</h3>
 <p>条件分岐をするには、<code>melx</code>というキーワードを用います。これは、スタックの位置をリセットしつつ、スタックの二番目の値を見て、0ならばスタックの一番目の値だけ節を飛ばします。なお、2つの値は消費されます。<br>
 以下の関数では、2つの値を受け取り、二番目の値が0でなければ一番目の2倍します。</p>
 <pre><code>lex mal2tva la lex la la lex
@@ -219,10 +223,10 @@ lex V<br>
     2 pelx la lex la lex la lex lex ata
        elx la lex la la lex lex ata
        elx la lex .
-</code></pre><h3 id="heading8">変数と参照</h3>
+</code></pre><h3 id="変数と参照">変数と参照</h3>
 <p>この言語では、データはスタックにしか存在しません。しかし、世の中には3つの値をこねくり回すだけでは事足りないことなどいくつもあります。<br>
 そういう時は、<code>l'</code>というキーワードを用います。用い方はまだ考察中&hellip;ごめんなさい</p>
-<h3 id="heading9">標準出力</h3>
+<h3 id="標準出力">標準出力</h3>
 <p>では、何か出力してみましょう。出力するには、<code>lex xel</code>という関数を用います。この関数は、受け取った値を出力し、何も返しません。</p>
 <pre><code>lex xel1 1 lex xel.
 </code></pre><p>たくさん何かを出力したい場合は再帰関数を用いるとよいでしょう。</p>
@@ -234,7 +238,7 @@ lex V<br>
        elx la lex .
 
 lex salar 114 97 108 97 115 6 lex xeless .
-</code></pre><h1 id="heading10">最後に</h1>
+</code></pre><h1 id="最後に">最後に</h1>
 <p>なんやこれ。
 <del>非文でもゆるしてくだしあ</del></p>
 

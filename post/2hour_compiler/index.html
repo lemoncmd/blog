@@ -3,11 +3,11 @@
   <head>
     <title>2時間でコンパイラを作った話 // だらだらと技術ブログ</title>
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.60.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="れもん(杏bot" />
     <meta name="description" content="" />
-    <link rel="stylesheet" href="https://blog.anzu.tech/css/main.min.61bb32028587f24ca28522d8d197970c7ef33284e5fffb45a75fcbbb2dbc4dcb.css" />
+    <link rel="stylesheet" href="https://blog.anzu.tech/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
     <link rel="stylesheet" href="/css/sharebutton.css">
 
@@ -19,7 +19,7 @@
 移ろいゆく景色を眺めながら、そこはかとなく
 あーコンパイラ作らないとな
 と思った。
-What&#39;s happened? とあるオフ会にてスライド発表をしよう！ということになりました。
+What&rsquo;s happened? とあるオフ会にてスライド発表をしよう！ということになりました。
 それで私はせっかくプログラミング言語の仕様を作ったのにこれを用いない手はない！ と思ったんですよ。
 それで、以下を用意する手はずだったんです。
  スライド コンパイラ(或いはインタプリタ) 気合  当日の朝。なにも用意できませんでした。
@@ -43,7 +43,7 @@ const tok = src.split(/\s&#43;/); また、これから作る「lex」言語は�
 移ろいゆく景色を眺めながら、そこはかとなく
 あーコンパイラ作らないとな
 と思った。
-What&#39;s happened? とあるオフ会にてスライド発表をしよう！ということになりました。
+What&rsquo;s happened? とあるオフ会にてスライド発表をしよう！ということになりました。
 それで私はせっかくプログラミング言語の仕様を作ったのにこれを用いない手はない！ と思ったんですよ。
 それで、以下を用意する手はずだったんです。
  スライド コンパイラ(或いはインタプリタ) 気合  当日の朝。なにも用意できませんでした。
@@ -63,7 +63,7 @@ const tok = src.split(/\s&#43;/); また、これから作る「lex」言語は�
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.anzu.tech/post/2hour_compiler/" />
 <meta property="article:published_time" content="2020-04-08T20:25:57+09:00" />
-<meta property="article:modified_time" content="2020-04-08T20:25:57+09:00" />
+<meta property="article:modified_time" content="2020-04-09T11:11:23+09:00" />
 
 
   </head>
@@ -75,10 +75,12 @@ const tok = src.split(/\s&#43;/); また、これから作る「lex」言語は�
       <div class="app-header-social">
         
           <a target="_blank" href="https://github.com/lemoncmd" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
   <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
 </svg></a>
         
           <a target="_blank" href="https://twitter.com/_lem0n_" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <title>twitter</title>
   <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
 </svg></a>
         
@@ -92,12 +94,14 @@ const tok = src.split(/\s&#43;/); また、これから作る「lex」言語は�
       <div class="post-meta">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
 </svg>
           Apr 8, 2020
         </div>
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
           3 min read
@@ -105,12 +109,12 @@ const tok = src.split(/\s&#43;/); また、これから作る「lex」言語は�
     </header>
     <div class="post-content">
       <p>※注意：この記事を読む前に<a href="../lex/">異世界の難解プログラミング言語「lex」の紹介</a>を読むことをお勧めします。</p>
-<h1 id="heading">まへがき</h1>
+<h1 id="まへがき">まへがき</h1>
 <p>私は電車に揺られながらオフ会会場へと向かっていた。<br>
 移ろいゆく景色を眺めながら、そこはかとなく</p>
 <p><em>あーコンパイラ作らないとな</em></p>
 <p>と思った。</p>
-<h1 id="whats-happened">What's happened?</h1>
+<h1 id="whats-happened">What&rsquo;s happened?</h1>
 <p>とあるオフ会にてスライド発表をしよう！ということになりました。<br>
 それで私はせっかく<a href="../lex/">プログラミング言語</a>の仕様を作ったのにこれを用いない手はない！
 と思ったんですよ。<br>
@@ -124,8 +128,8 @@ const tok = src.split(/\s&#43;/); また、これから作る「lex」言語は�
 おはようございます。<br>
 あえて言うならば気合だけは用意できました。</p>
 <p>そこで、何が何でも発表するため、スライドは<a href="https://twitter.com/hsjoihs">hsjoihs氏</a>に用意してもらえることになったので、私は行きの電車内の2時間でコンパイラを作成することにした。</p>
-<h1 id="heading1">ほんぶん</h1>
-<h2 id="heading2">コンパイラ(インタプリタ)を作る言語</h2>
+<h1 id="ほんぶん">ほんぶん</h1>
+<h2 id="コンパイラインタプリタを作る言語">コンパイラ(インタプリタ)を作る言語</h2>
 <p>2時間で作れる規模のコンパイラを作るにあたり、私が手癖で書ける言語といえばJavaScriptしかありませんでした。(それが後々功を奏した)<br>
 というわけでまずは<code>index.html</code>と<code>index.js</code>を作成します。<br>
 CSSだァ？そんなもの要るわけねぇだろ！</p>
@@ -150,7 +154,7 @@ CSSだァ？そんなもの要るわけねぇだろ！</p>
     &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/*あとで*/&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;run&#34;</span>&gt;
   &lt;/<span style="color:#f92672">body</span>&gt;
 &lt;/<span style="color:#f92672">html</span>&gt;
-</code></pre></div><h2 id="heading3">インタプリタの仕様</h2>
+</code></pre></div><h2 id="インタプリタの仕様">インタプリタの仕様</h2>
 <p>インタプリタは大体以下の構造で動きます。ちなみにコンパイラとインタプリタの違いは出力先がruntimeか機械語かの違いです(ほんまか？)。</p>
 <p><img src="/img/interpreter.png" alt="interpreter"></p>
 <p>しかし、ここでは2時間で仕上げるために以下を削ります。</p>
@@ -159,7 +163,7 @@ CSSだァ？そんなもの要るわけねぇだろ！</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">tok</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">src</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">/\s+/</span>);
 </code></pre></div><p>また、これから作る「lex」言語はプログラムの順番とIR(中間表現)の順番が大体同じという言語特徴を持っているので、パーサーとコードジェネレーターをくっつけることができます。<br>
 そして最適化は2時間クオリティに必要ありませんよね？</p>
-<h2 id="heading4">パーサー(兼コードジェネレーター)</h2>
+<h2 id="パーサー兼コードジェネレーター">パーサー(兼コードジェネレーター)</h2>
 <p>この「lex」言語は、LL(1)文法で記述できる言語、という分類をされます。<br>
 これはどういうことかというと、言語を解析する際に遠くのトークン(激ウマギャグ)を読んだり既に読んだトークンを読み直したりしなくても、単純にトークンを1つずつ解析していくだけで読める言語だということです。単純ってことです。</p>
 <p>コードを解析する方法としては再帰下降法を用います。<br>
@@ -292,7 +296,7 @@ number <span style="color:#f92672">::=</span> (数値)
 </span><span style="color:#75715e"></span><span style="color:#a6e22e">next</span>(); <span style="color:#75715e">//&#34;.&#34;の読み飛ばし
 </span></code></pre></div><p>IRの命令のデータ形式はtypeに命令の名前、valueに引数を入れています。<br>
 これで実際に実行するとき扱いやすくなります。</p>
-<h2 id="heading5">コード実行</h2>
+<h2 id="コード実行">コード実行</h2>
 <p>解析して出力されたIRを実行していきましょう！</p>
 <p>まず、この言語はスタック指向なのでスタックを作ります。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">runtime</span>(<span style="color:#a6e22e">src</span>) {
@@ -352,12 +356,12 @@ number <span style="color:#f92672">::=</span> (数値)
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">src</span>.<span style="color:#a6e22e">prog</span>.<span style="color:#a6e22e">forEach</span>(<span style="color:#a6e22e">fname</span> =&gt; <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">fname</span>));
 </code></pre></div><p>こういうとき関数型プログラミングって便利なのよね。</p>
 <p>というわけでこれにてコードが実行できるようになりました！</p>
-<h2 id="heading6">仕上げ</h2>
+<h2 id="仕上げ">仕上げ</h2>
 <p>HTMLのボタンを実行するコードをまだ書いてなかったなと思いつつ。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;runtime(compile(document.getElementById(&#39;program&#39;).value))&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;run&#34;</span>&gt;
 </code></pre></div><p>これで、書かれたプログラムを読み取り、コンパイルし、実行します！やったー！
 <img src="/img/lexscreen.png" alt="screenshot"></p>
-<h1 id="heading7">さいごに</h1>
+<h1 id="さいごに">さいごに</h1>
 <p>オフ会では無事発表を終えました。好評をいただいて何よりでした。わーい<br>
 皆さんも作ってみましょうコンパイラ(575)</p>
 
